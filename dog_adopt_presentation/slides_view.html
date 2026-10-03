@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ถอดรหัสเบื้องหลังการรับเลี้ยงสุนัข - All Slides View</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-base: #0a0f1d;
+      --bg-surface: #131b2e;
+      --bg-card: rgba(26, 37, 63, 0.7);
+      --border-color: rgba(255, 255, 255, 0.12);
+      --border-accent: rgba(99, 102, 241, 0.4);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --accent-primary: #6366f1;
+      --accent-success: #10b981;
+      --accent-danger: #ef4444;
+      --accent-warning: #f59e0b;
+      --accent-cyan: #06b6d4;
+      --font-th: 'Prompt', sans-serif;
+      --font-en: 'Outfit', sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg-base);
+      color: var(--text-primary);
+      font-family: var(--font-th);
+      padding: 30px 20px 80px 20px;
+      line-height: 1.6;
+    }
+    .top-nav {
+      position: sticky;
+      top: 0;
+      background: rgba(19, 27, 46, 0.95);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 12px 24px;
+      max-width: 1200px;
+      margin: 0 auto 30px auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+    }
+    .top-nav h1 {
+      font-size: 18px;
+      font-weight: 700;
+      background: linear-gradient(135deg, #6366f1, #8b5cf6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .top-links {
+      display: flex;
+      gap: 12px;
+    }
+    .top-btn {
+      background: var(--accent-primary);
+      color: white;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      transition: opacity 0.2s;
+    }
+    .top-btn:hover { opacity: 0.85; }
+    .top-btn.sec {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+    }
+    .slides-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+    .slide-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 32px 36px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 14px;
+      margin-bottom: 24px;
+    }
+    .slide-tag {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #818cf8;
+      background: rgba(99, 102, 241, 0.15);
+      padding: 2px 10px;
+      border-radius: 999px;
+      margin-bottom: 6px;
+    }
+    .slide-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .slide-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+    .slide-badge {
+      font-family: var(--font-en);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-color);
+      padding: 4px 12px;
+      border-radius: 999px;
+    }
+    .slide-content-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 28px;
+      align-items: center;
+    }
+    .slide-full-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .chart-container {
+      background: rgba(26, 37, 63, 0.5);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .chart-container img {
+      width: 100%;
+      height: auto;
+      max-height: 420px;
+      object-fit: contain;
+      border-radius: 8px;
+      display: block;
+    }
+    .chart-caption {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 8px;
+      text-align: center;
+    }
+    .metric-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .metric-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+    .metric-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 4px;
+      height: 100%;
+      background: var(--accent-primary);
+    }
+    .metric-item.green::before { background: var(--accent-success); }
+    .metric-item.red::before { background: var(--accent-danger); }
+    .metric-item.amber::before { background: var(--accent-warning); }
+    .metric-item.cyan::before { background: var(--accent-cyan); }
+    .metric-val {
+      font-size: 26px;
+      font-weight: 800;
+      font-family: var(--font-en);
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+    .metric-val.green { color: var(--accent-success); }
+    .metric-val.red { color: var(--accent-danger); }
+    .metric-val.amber { color: var(--accent-warning); }
+    .metric-val.cyan { color: var(--accent-cyan); }
+    .metric-lbl {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .metric-sub {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+    .info-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .info-item {
+      background: rgba(26, 37, 63, 0.4);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-size: 13px;
+    }
+    .info-item strong { color: var(--text-primary); }
+    .info-item span { color: var(--text-secondary); }
+    .speaker-note-box {
+      margin-top: 18px;
+      background: rgba(99, 102, 241, 0.08);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      border-left: 4px solid var(--accent-primary);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 13px;
+      color: #c7d2fe;
+    }
+    .speaker-note-box strong {
+      color: #ffffff;
+      display: block;
+      margin-bottom: 4px;
+    }
+    @media (max-width: 900px) {
+      .slide-content-grid, .slide-full-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top-nav">
+    <h1>🐕 ถอดรหัสเบื้องหลังการรับเลี้ยงสุนัข (42,000 เคส)</h1>
+    <div class="top-links">
+      <a href="presentation.html" class="top-btn">🖥️ มุมมองสไลด์เต็มจอ</a>
+      <a href="Dog_Adoption_Presentation.pptx" class="top-btn" download style="background: #e11d48;">📥 ดาวน์โหลด PowerPoint (.pptx)</a>
+      <a href="javascript:window.print()" class="top-btn sec">🖨️ พิมพ์เป็น PDF</a>
+    </div>
+  </div>
+
+  <div class="slides-container">
+
+    <!-- SLIDE 1 -->
+    <div class="slide-card">
+      <div class="slide-header">
+        <div>
+          <span class="slide-tag">Title Slide</span>
+          <h2 class="slide-title">ถอดรหัสเบื้องหลังการรับเลี้ยงสุนัข: ทำไม 1 ใน 7 ตัวถึงถูกส่งคืน?</h2>
+          <div class="slide-subtitle">การวิเคราะห์ข้อมูลเชิงลึก 42,000 เคส เพื่อค้นหาปัจจัยความสำเร็จและยกระดับการอยู่ร่วมกันอย่างยั่งยืน</div>
+        </div>
+        <div class="slide-badge">01 / 13</div>
+      </div>
+      <div class="slide-content-grid">
+        <div>
+          <div class="metric-grid">
+            <div class="metric-item">
+              <div class="metric-val">42,000</div>
+              <div class="metric-lbl">เคสในระบบ</div>
+              <div class="metric-sub">ชุดข้อมูลขนาดใหญ่</div>
+            </div>
+            <div class="metric-item green">
+              <div class="metric-val green">85.0%</div>
+              <div class="metric-lbl">อัตราสำเร็จถาวร</div>
+              <div class="metric-sub">ได้บ้านตลอดชีวิต</div>
+            </div>
+            <div class="metric-item red">
+              <div class="metric-val red">15.0%</div>
+              <div class="metric-lbl">ถูกส่งคืนสถานสงเคราะห์</div>
+              <div class="metric-sub">6,297 ตัวล้มเหลว</div>
+            </div>
+            <div class="metric-item cyan">
+              <div class="metric-val cyan">1 ใน 7</div>
+              <div class="metric-lbl">สัดส่วนความสูญเสีย</div>
+              <div class="metric-sub">เทียบเคียงสากล</div>
+            </div>
+          </div>
+          <p style="font-size: 14px; color: var(--text-secondary);">
+            การรับเลี้ยงสุนัขไม่ใช่แค่เรื่องของความเมตตา แต่คือ "วิทยาศาสตร์แห่งการจับคู่ที่ลงตัว (The Science of Matching)" โดยมุ่งเน้นการแก้ปัญหาที่พฤติกรรมและการปรับตัว
+          </p>
+        </div>
+        <div class="chart-container">
+          <img src="assets/hero.jpg" alt="Dog Adoption Hero">
+          <div class="chart-caption">ภาพประกอบ: สุนัขและเจ้าของในบ้านที่อบอุ่นและลงตัว</div>
+        </div>
+      </div>
+      <div class="speaker-note-box">
+        <strong>🎙️ บทพูดผู้บรรยาย:</strong>
+        "สวัสดีทุกท่านครับ วันนี้เราจะมาร่วมกันเปิดมุมมองใหม่เกี่ยวกับการรับเลี้ยงสุนัขผ่านชุดข้อมูลขนาดใหญ่ 42,000 เคส หลายคนมักเข้าใจว่าเมื่อสุนัขได้บ้านใหม่แล้วเรื่องราวจะจบลงอย่างมีความสุข แต่ข้อมูลเชิงประจักษ์บอกเราว่า '1 ใน 7 ตัว' ต้องถูกส่งคืนกลับมายังสถานสงเคราะห์ วันนี้เราจะมาเจาะลึกกันว่า อะไรคือสาเหตุที่แท้จริง และเราจะเปลี่ยนความล้มเหลวนี้ให้เป็นความสำเร็จที่ยั่งยืนได้อย่างไรครับ"
+      </div>
+    </div>
+
+    <!-- SLIDE 2 -->
+    <div class="slide-card">
+      <div class="slide-header">
+        <div>
+          <span class="slide-tag">Executive Summary</span>
+          <h2 class="slide-title">ภาพรวม 42,000 เคส: สำเร็จ 85% แต่มีช่องว่างความสูญเสีย 15%</h2>
+          <div class="slide-subtitle">การรับเลี้ยงสำเร็จเป็นส่วนใหญ่ ทว่า 6,297 ตัวต้องเผชิญกับความบอบช้ำซ้ำสอง</div>
+        </div>
+        <div class="slide-badge">02 / 13</div>
+      </div>
+      <div class="slide-content-grid">
+        <div>
+          <div class="metric-grid">
+            <div class="metric-item green">
+              <div class="metric-val green">85.0%</div>
+              <div class="metric-lbl">รับเลี้ยงสำเร็จ (Stayed Home)</div>
+              <div class="metric-sub">35,703 ครอบครัวได้สมาชิกถาวร</div>
+            </div>
+            <div class="metric-item red">
+              <div class="metric-val red">15.0%</div>
+              <div class="metric-lbl">ถูกส่งคืน (Returned)</div>
+              <div class="metric-sub">6,297 ตัวถูกส่งกลับสถานสงเคราะห์</div>
+            </div>
+            <div class="metric-item cyan">
+              <div class="metric-val cyan">1 ใน 7</div>
+              <div class="metric-lbl">อัตราส่วนความล้มเหลว</div>
+              <div class="metric-sub">สถิติเทียบเคียงระดับสากล</div>
+            </div>
+            <div class="metric-item amber">
+              <div class="metric-val amber">7 วัน</div>
+              <div class="metric-lbl">ค่ามัธยฐานการส่งคืน</div>
+              <div class="metric-sub">ครึ่งหนึ่งเกิดขึ้นใน 1 สัปดาห์แรก</div>
+            </div>
+          </div>
+          <div class="info-item" style="border-left: 4px solid var(--accent-primary);">
+            <strong>💡 ประเด็นสำคัญ:</strong> สุนัขที่ถูกส่งคืน 1 ครั้งมีความเสี่ยงสูงขึ้นที่จะมีปัญหาพฤติกรรมสะสม และสร้างภาระหมุนเวียนงบประมาณของสถานสงเคราะห์ การทำความเข้าใจ "สาเหตุของ 15% นี้" จึงเป็นภารกิจหลักของการวิเคราะห์
+          </div>
+        </div>
+        <div class="chart-container">
+          <img src="assets/charts/01_overall_outcome.png" alt="Overall Adoption Outcome">
+          <div class="chart-caption">แผนภูมิโดนัทแสดงสัดส่วน 85.0% สำเร็จ vs 15.0% ถูกส่งคืน</div>
+        </div>
+      </div>
+      <div class="speaker-note-box">
+        <strong>🎙️ บทพูดผู้บรรยาย:</strong>
+        "จากข้อมูล 42,000 เคส เราพบว่า 85% หรือราว 35,700 ตัวสามารถปรับตัวและอยู่กับครอบครัวใหม่ได้อย่างถาวร นี่คือความสำเร็จที่น่าชื่นชม แต่ในทางกลับกัน ตัวเลข 15% หรือ 6,297 ตัวที่ถูกส่งคืน ไม่ใช่แค่สถิติธรรมดา เพราะการถูกส่งคืนหนึ่งครั้งหมายถึงความบอบช้ำทางจิตใจของสุนัข ความผิดหวังของครอบครัว และทรัพยากรของสถานสงเคราะห์ที่ต้องวนกลับมาดูแลซ้ำ คำถามสำคัญคือ 6,297 เคสนี้ เกิดอะไรขึ้นกันแน่?"
+      </div>
+    </div>
+
+    <!-- SLIDE 3 -->
+    <div class="slide-card">
+      <div class="slide-header">
+        <div>
+          <span class="slide-tag">Root Cause Breakdown</span>
+          <h2 class="slide-title">เจาะลึก 9 สาเหตุแห่งความล้มเหลว: พฤติกรรมครองสัดส่วน >71%</h2>
+          <div class="slide-subtitle">คนไม่ได้ส่งคืนเพราะแพ้ขนหรือหมาป่วย แต่เป็นเรื่องของความสัมพันธ์และการปรับตัว</div>
+        </div>
+        <div class="slide-badge">03 / 13</div>
+      </div>
+      <div class="slide-content-grid">
+        <ul class="info-list">
+          <li class="info-item" style="border-left: 4px solid var(--accent-danger);">
+            <strong>1. เข้ากับสัตว์เลี้ยงเดิมในบ้านไม่ได้: 22.0% (1,387 ตัว)</strong><br>
+            <span>สุนัขเจ้าถิ่นปฏิเสธตัวใหม่ เกิดการต่อสู้ ขาดการทำ Meet & Greet ก่อนรับ</span>
+          </li>
+          <li class="info-item" style="border-left: 4px solid var(--accent-danger);">
+            <strong>2. พฤติกรรมก้าวร้าว/ดุร้าย: 21.5% (1,352 ตัว)</strong><br>
+            <span>กัดคนหรือสัตว์อื่น ไม่ได้รับการประเมินและฝึกอบรมก่อนส่งมอบ</span>
+          </li>
+          <li class="info-item" style="border-left: 4px solid var(--accent-warning);">
+            <strong>3. วิตกกังวล/ทำลายข้าวของ: 15.5% (975 ตัว)</strong><br>
+            <span>เห่าหอน กัดแทะสิ่งของเมื่อถูกทิ้งให้อยู่ลำพังวันแรกๆ</span>
+          </li>
+          <li class="info-item" style="border-left: 4px solid var(--accent-cyan);">
+            <strong>4. ไม่เป็นไปตามคาดหวัง: 11.9% (750 ตัว)</strong><br>
+            <span>คาดหวังว่าสุนัขจะสมบูรณ์แบบตั้งแต่วันแรกโดยไม่ต้องปรับตัว</span>
+          </li>
+          <li class="info-item">
+            <strong>⚠️ ปัจจัยสุขภาพมีสัดส่วนน้อยมาก:</strong> โรคประจำตัวมีเพียง 5.0% และภูมิแพ้ขนมีเพียง 3.8%
+          </li>
+        </ul>
+        <div class="chart-container">
+          <img src="assets/charts/02_return_reasons.png" alt="Top Return Reasons">
+          <div class="chart-caption">แผนภูมิแท่งแจกแจง 9 สาเหตุการส่งคืนสุนัข (4 สาเหตุหลักครอง >71%)</div>
+        </div>
+      </div>
+      <div class="speaker-note-box">
+        <strong>🎙️ บทพูดผู้บรรยาย:</strong>
+        "เมื่อเราแจกแจงสาเหตุของการส่งคืน 6,297 เคส ผลลัพธ์ที่ได้น่าประหลาดใจมากครับ หลายคนคิดว่าคนส่งหมาคืนเพราะแพ้ขนหรือหมาป่วย แต่ตัวเลขจริงชี้ว่า อาการแพ้มีแค่ 3.8% และปัญหาสุขภาพมีแค่ 5% เท่านั้น แต่กว่า 71% เกิดจาก 4 เรื่องหลัก: เข้ากับสัตว์เลี้ยงเดิมไม่ได้, ความก้าวร้าว, ความวิตกกังวล และความคาดหวังที่ผิด นี่คือหลักฐานชัดเจนว่า ความล้มเหลวส่วนใหญ่เป็นเรื่องของพฤติกรรมและการปรับตัวครับ"
+      </div>
+    </div>
+
+    <!-- SLIDE 4 -->
+    <div class="slide-card">
+      <div class="slide-header">
+        <div>
+          <span class="slide-tag">Critical Window</span>
+          <h2 class="slide-title">สัปดาห์ชี้ชะตา: ค่ามัธยฐานการส่งคืนอยู่ที่ "7 วัน"</h2>
+          <div class="slide-subtitle">ถ้าการรับเลี้ยงจะล้มเหลว มันมักจะล้มเหลวตั้งแต่วันแรกๆ</div>
+        </div>
+        <div class="slide-badge">04 / 13</div>
+      </div>
+      <div class="slide-full-grid">
+        <div class="chart-container">
+          <img src="assets/charts/10_days_to_return.png" alt="Days to Return">
+          <div class="chart-caption">ฮิสโตแกรมแสดงจำนวนวันที่สุนัขถูกส่งคืน (Median = 7 วัน, พุ่งสูงสุดใน 1-14 วันแรก)</div>
+        </div>
+        <div class="chart-container">
+          <img src="assets/charts/11_reason_vs_timing.png" alt="Reason vs Timing">
+          <div class="chart-caption">Boxplot เปรียบเทียบระยะเวลาของแต่ละปัญหา (พฤติกรรมปะทุทันที vs ที่พักอาศัยค่อยๆ สะสม)</div>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px;">
+        <div class="info-item" style="border-left: 4px solid var(--accent-danger);">
+          <strong>⚡ วิกฤตระยะต้น (วันที่ 1–14):</strong> ปัญหาความก้าวร้าว การกัดกับหมาเดิม และเห่าหอนทำลายของจะปะทุทันทีในสัปดาห์แรก
+        </div>
+        <div class="info-item" style="border-left: 4px solid var(--accent-warning);">
+          <strong>⏳ วิกฤตระยะสะสม (เดือนที่ 1–3):</strong> ปัญหานิติบุคคล/หอพัก ค่าใช้จ่าย และความเหนื่อยล้าสะสมจะตามมาในเดือนที่ 2 และ 3
+        </div>
+      </div>
+      <div class="speaker-note-box">
+        <strong>🎙️ บทพูดผู้บรรยาย:</strong>
+        "สไลด์นี้คือข้อมูลชี้เป็นชี้ตายของการจัดการครับ สถิติระบุว่า ค่ามัธยฐานของการส่งคืนอยู่ที่ '7 วัน' เท่านั้น แปลว่าถ้าการรับเลี้ยงจะพัง มันมักจะพังตั้งแต่อาทิตย์แรก! และเมื่อเราดูตามประเภทปัญหา จะเห็นการแบ่งกลุ่มที่ชัดเจนมาก ปัญหาพฤติกรรมปะทุทันทีในสัปดาห์แรก ส่วนปัญหาเรื่องค่าใช้จ่ายหรือนิติบุคคลจะตามมาในเดือนที่ 2 หรือ 3 ดังนั้น '14 วันแรก' จึงเป็นหน้าต่างเวลาทอง (Golden Window) ที่ต้องช่วยเหลืออย่างใกล้ชิดครับ"
+      </div>
+    </div>
+
+    <!-- SLIDE 5 -->
+    <div class="slide-card">
+      <div class="slide-header">
+        <div>
+          <span class="slide-tag">Risk Multiplier</span>
+          <h2 class="slide-title">พฤติกรรมเสี่ยงสะสม: กฎการทวีคูณความเสี่ยง (9.2% สู่ 40.2%)</h2>
+          <div class="slide-subtitle">เมื่อมีปัญหาพฤติกรรมสะสมครบ 3 ด้าน สุนัขเกือบครึ่งหนึ่งจะถูกส่งคืน</div>
+        </div>
+        <div class="slide-badge">05 / 13</div>
+      </div>
+      <div class="slide-content-grid">
+        <ul class="info-list">
+          <li class="info-item" style="border-left: 4px solid var(--accent-success);">
+            <strong>0 พฤติกรรมเสี่ยง: อัตราส่งคืน 9.2%</strong><br>
+            <span>สำเร็จสูงถึง 90.8% สุนัขไม่มีนิสัยดุ ไม่ขี้กังวล และขับถ่ายเป็นที่เป็นทาง</span>
+          </li>
+          <li class="info-item" style="border-left: 4px solid var(--accent-warning);">
+            <strong>1 พฤติกรรมเสี่ยง: อัตราส่งคืน 16.5%</strong><br>
+            <span>เริ่มมีความเสี่ยงสูงกว่าค่าเฉลี่ยของระบบ</span>
+          </li>
+          <li class="info-item" style="border-left: 4px solid var(--accent-danger);">
+            <strong>2 พฤติกรรมเสี่ยง: อัตราส่งคืน 27.0%</strong><br>
+            <span>มากกว่า 1 ใน 4 ตัวจะต้องถูกส่งคืนกลับมา</span>
+          </li>
+          <li class="info-item" style="border-left: 4px solid #dc2626;">
+            <strong>3 พฤติกรรมเสี่ยง: อัตราส่งคืน 40.2%</strong><br>
+            <span>วิกฤตสูงสุด! 10 ตัวจะถูกส่งคืนถึง 4 ตัว ปัญหาพฤติกรรมเปรียบเสมือนตัวคูณความเสี่ยง</span>
+          </li>
+        </ul>
+        <div class="chart-container">
+          <img src="assets/charts/14_behaviour_burden.png" alt="Behaviour Burden">
+          <div class="chart-caption">กราฟแสดงการเพิ่มขึ้นแบบขั้นบันไดของอัตราการส่งคืนตามพฤติกรรมเสี่ยงสะสม</div>
+        </div>
+      </div>
+      <div class="speaker-note-box">
+        <strong>🎙️ บทพูดผู้บรรยาย:</strong>
+        "กราฟนี้แสดง 'Behaviour Burden' หรือภาระพฤติกรรมสะสม ถ้าสุนัขไม่มีปัญหาพฤติกรรมรุนแรงเลย อัตราการส่งคืนจะต่ำมากเพียง 9.2% แต่เมื่อมีพฤติกรรมเสี่ยง 1 อย่าง อัตราส่งคืนขยับเป็น 16.5% ถ้ามี 2 อย่างกระโดดไปที่ 27% และถ้ามีทั้งดุ ขี้กังวล และก้าวร้าวพร้อมกัน อัตราส่งคืนจะพุ่งแตะ 40.2%! ปัญหาพฤติกรรมจึงเปรียบเหมือนตัวคูณความเสี่ยงที่เราต้องคัดกรองตั้งแต่ก่อนส่งมอบครับ"
+      </div>
+    </div>
+
+    <!-- SLIDE 6 -->
+    <div class="slide-card">
+      <div class="slide-header">
+        <div>
+          <span class="slide-tag">Protective Factor</span>
+          <h2 class="slide-title">การฝึกสุนัขคือวัคซีนป้องกันการส่งคืน (Training Buffer)</h2>
+          <div class="slide-subtitle">การฝึกช่วยลดอัตราการส่งคืนในกลุ่มดุร้ายลงได้ถึง 17.5%</div>
+        </div>
+        <div class="slide-badge">06 / 13</div>
+      </div>
+      <div class="slide-content-grid">
+        <div>
+          <div class="info-item" style="border-left: 4px solid var(--accent-danger); margin-bottom: 14px;">
+            <strong>สุนัขดุร้ายสูง (High Aggression):</strong><br>
+            • ไม่ฝึกเลย: ถูกส่งคืน 47.1% (แทบโยนเหรียญหัวก้อย)<br>
+            • ได้รับการฝึกขั้นสูง: ส่งคืนลดเหลือ 29.6% (ลดลงไปถึง 17.5 pp)
+          </div>
+          <div class="info-item" style="border-left: 4px solid var(--accent-success); margin-bottom: 14px;">
+            <strong>สุนัขนิสัยดี (Low Aggression):</strong><br>
+            • ไม่ฝึก: ส่งคืน 12.8%<br>
+            • ฝึกขั้นสูง: ส่งคืนเหลือเพียง 6.7% (เกราะคุ้มกันสูงสุด)
+          </div>
+          <div class="info-item" style="border-left: 4px solid var(--accent-cyan);">
+            <strong>💡 สรุปผลเชิงนโยบาย:</strong> การลงทุนกับการฝึกพฤติกรรมพื้นฐานก่อนส่งมอบ ช่วยชีวิตสุนัขจากการถูกส่งคืนได้มหาศาลและคุ้มค่างบประมาณที่สุด
+          </div>
+        </div>
+        <div class="chart-container">
+          <img src="assets/charts/15_training_buffer.png" alt="Training Buffer">
+          <div class="chart-caption">Heatmap แสดงผลของการฝึกสุนัข (Training Level) ในการลดอัตราการส่งคืนทุกระดับความดุร้าย</div>
+        </div>
+      </div>
+      <div class="speaker-note-box">
+        <strong>🎙️ บทพูดผู้บรรยาย:</strong>
+        "ข่าวดีที่สุดคือ 'เราแก้ไขมันได้' ครับ สุนัขที่มีนิสัยดุร้ายและไม่ได้รับการฝึก จะถูกส่งคืนสูงถึง 47.1% แต่เมื่อสุนัขกลุ่มเดียวกันนี้ได้รับการฝึกฝน อัตราส่งคืนจะลดลงเหลือ 29.6% ลดลงไปถึง 17.5% นั่นหมายความว่า หากสถานสงเคราะห์ลงทุนกับการฝึกพฤติกรรมพื้นฐานก่อนส่งมอบ จะช่วยชีวิตสุนัขจากการถูกส่งคืนได้มหาศาลครับ"
+      </div>
+    </div>
+
+    <!-- SLIDE 7 -->
+    <div class="slide-card">
+      <div class="slide-header">
+        <div>
+          <span class="slide-tag">Lifestyle Matching</span>
+          <h2 class="slide-title">ความไม่ลงรอยของวิถีชีวิตและพื้นที่ (Lifestyle Mismatch)</h2>
+          <div class="slide-subtitle">การเลือกสุนัขไม่ตรงกับสภาพความเป็นอยู่จริงของบ้าน</div>
+        </div>
+        <div class="slide-badge">07 / 13</div>
+      </div>
+      <div class="slide-full-grid">
+        <div class="chart-container">
+          <img src="assets/charts/08_energy_mismatch.png" alt="Energy Mismatch">
+          <div class="chart-caption">Energy Mismatch: สุนัขพลังงานสูงแต่เจ้าของไม่มีเวลาพาออกกำลังกาย (ส่งคืนพุ่งจาก 11.5% -> 21.2%)</div>
+        </div>
+        <div class="chart-container">
+          <img src="assets/charts/07_hours_alone.png" alt="Hours Alone">
+          <div class="chart-caption">การปล่อยให้อยู่ลำพัง: สุนัขที่ถูกทิ้งไว้เกิน 8 ชั่วโมงต่อวัน มีอัตราส่งคืนสูงถึง 17.5%</div>
+        </div>
+      </div>
+      <div class="speaker-note-box">
+        <strong>🎙️ บทพูดผู้บรรยาย:</strong>
+        "นอกจากนิสัยสุนัขแล้ว ความเข้ากันได้ของวิถีชีวิตคือตัวแปรสำคัญครับ หากสุนัขพลังงานสูงไปอยู่กับเจ้าของที่ไม่มีเวลาพาไปออกกำลังกาย อัตราส่งคืนจะพุ่งจาก 11.5% ไปเป็น 21.2% ทันที เช่นเดียวกับการปล่อยสุนัขทิ้งไว้ลำพังเกิน 8 ชั่วโมงต่อวัน อัตราส่งคืนก็แตะ 17.5% ดังนั้นการคัดเลือกสุนัขให้ตรงกับสภาพความเป็นอยู่จริง จึงเป็นเกราะป้องกันที่ดีที่สุดครับ"
+      </div>
+    </div>
+
+    <!-- SLIDE 8 -->
+    <div class="slide-card">
+      <div class="slide-header">
+        <div>
+          <span class="slide-tag">Mindset & Perception</span>
+          <h2 class="slide-title">มายาคติเรื่องประสบการณ์: ความคาดหวังสำคัญกว่ามือเก่าหรือมือใหม่</h2>
+          <div class="slide-subtitle">มือใหม่ที่มีความคาดหวังสมจริง สำเร็จมากกว่าคนมีประสบการณ์แต่คาดหวังผิด</div>
+        </div>
+        <div class="slide-badge">08 / 13</div>
+      </div>
+      <div class="slide-content-grid">
+        <div>
+          <div class="metric-item green" style="margin-bottom: 14px;">
+            <div class="metric-val green">9.4%</div>
+            <div class="metric-lbl">มือใหม่ + คาดหวังสมจริง (Realistic First-timers)</div>
+            <div class="metric-sub">สำเร็จสูงถึง 90.6% เพราะเตรียมใจรับการปรับตัว</div>
+          </div>
+          <div class="metric-item red" style="margin-bottom: 14px;">
+            <div class="metric-val red">16.6%</div>
+            <div class="metric-lbl">เคยเลี้ยงมาก่อน + คาดหวังสูงเกินจริง (Unrealistic Experienced)</div>
+            <div class="metric-sub">ล้มเหลวสูงกว่ามือใหม่เกือบ 2 เท่า!</div>
+          </div>
+          <div class="info-item" style="border-left: 4px solid var(--accent-cyan);">
+            <strong>💡 บทเรียน:</strong> การปรับทัศนคติและความคาดหวังของผู้รับเลี้ยงให้ตรงกับความเป็นจริง มีผลต่อความสำเร็จมากกว่าประวัติการเลี้ยงดูในอดีตอย่างสิ้นเชิง
+          </div>
+        </div>
+        <div class="chart-container">
+          <img src="assets/charts/16_expectation_mediation.png" alt="Expectation Mediation">
+          <div class="chart-caption">แผนภูมิเปรียบเทียบอัตราการส่งคืนระหว่างระดับประสบการณ์และความสมจริงของความคาดหวัง</div>
+        </div>
+      </div>
+      <div class="speaker-note-box">
+        <strong>🎙️ บทพูดผู้บรรยาย:</strong>
+        "นี่คือหนึ่งในสไลด์ที่ทรงพลังที่สุดครับ เรามักคิดว่า 'มือใหม่' เสี่ยงสูง แต่ตัวเลขบอกความจริงที่ตรงกันข้ามเลยครับ ถ้าผู้รับเลี้ยงมือใหม่มีความคาดหวังที่สมจริง รู้ว่าหมาอาจมีตื่นกลัวช่วงแรก อัตราส่งคืนจะต่ำมากเพียง 9.4% ซึ่งชนะคนมีประสบการณ์แต่คาดหวังว่าหมาต้องเพอร์เฟกต์ ที่มีอัตราส่งคืนถึง 16.6%! สิ่งนี้บอกเราว่า การปรับทัศนคติสำคัญกว่าประวัติในอดีตครับ"
+      </div>
+    </div>
+
+    <!-- SLIDE 9 -->
+    <div class="slide-card">
+      <div class="slide-header">
+        <div>
+          <span class="slide-tag">Adopter Preparation</span>
+          <h2 class="slide-title">พลังของการเตรียมตัว: เยี่ยมชม 4 ครั้ง ลดอัตราส่งคืนเหลือ 10.9%</h2>
+          <div class="slide-subtitle">การให้เวลาทำความคุ้นเคยก่อนรับกลับ ช่วยเปลี่ยนความเสี่ยงเป็นความผูกพัน</div>
+        </div>
+        <div class="slide-badge">09 / 13</div>
+      </div>
+      <div class="slide-content-grid">
+        <ul class="info-list">
+          <li class="info-item" style="border-left: 4px solid var(--accent-danger);">
+            <strong>มาเยี่ยม 1 ครั้ง (รับกลับทันที): อัตราส่งคืน 16.6%</strong><br>
+            <span>การตัดสินใจฉับพลันมักมองข้ามปัญหาพฤติกรรมจริง</span>
+          </li>
+          <li class="info-item" style="border-left: 4px solid var(--accent-warning);">
+            <strong>มาเยี่ยม 2 ครั้ง: อัตราส่งคืน 14.8%</strong>
+          </li>
+          <li class="info-item" style="border-left: 4px solid var(--accent-cyan);">
+            <strong>มาเยี่ยม 3 ครั้ง: อัตราส่งคืน 12.5%</strong>
+          </li>
+          <li class="info-item" style="border-left: 4px solid var(--accent-success);">
+            <strong>มาเยี่ยม 4 ครั้งขึ้นไป: อัตราส่งคืนเหลือ 10.9%</strong><br>
+            <span>ความคุ้นเคยช่วยสร้างความผูกพันและลดความตื่นกลัว</span>
+          </li>
+          <li class="info-item">
+            <strong>📋 Adoption Counselling:</strong> การบังคับให้อบรมให้คำปรึกษาก่อนรับเลี้ยง ช่วยตัดความเสี่ยงลงได้อย่างชัดเจน
+          </li>
+        </ul>
+        <div class="chart-container">
+          <img src="assets/charts/05_visits_before_adoption.png" alt="Visits Before Adoption">
+          <div class="chart-caption">กราฟแสดงการลดลงของอัตราการส่งคืนเมื่อเพิ่มจำนวนครั้งที่มาเยี่ยมชมสุนัข</div>
+        </div>
+      </div>
+      <div class="speaker-note-box">
+        <strong>🎙️ บทพูดผู้บรรยาย:</strong>
+        "ดูสถิติการมาเยี่ยมสุนัขก่อนรับเลี้ยงครับ: คนที่มาดูวันเดียวแล้วรับกลับทันที มีอัตราส่งคืนสูงถึง 16.6% แต่เมื่อเพิ่มจำนวนครั้งที่มาเยี่ยมเป็น 2, 3 และ 4 ครั้ง อัตราการส่งคืนจะดิ่งลงเหลือเพียง 10.9% เท่านั้น! การมาเยี่ยมซ้ำเปิดโอกาสให้ทั้งคนและสุนัขได้สัมผัสตัวตนที่แท้จริง ช่วยตัดความเสี่ยงลงได้อย่างชัดเจนครับ"
+      </div>
+    </div>
+
+    <!-- SLIDE 10 -->
+    <div class="slide-card">
+      <div class="slide-header">
+        <div>
+          <span class="slide-tag">Correlation Tornado</span>
+          <h2 class="slide-title">ทอร์นาโดสรุปปัจจัยเสี่ยง vs ปัจจัยปกป้อง</h2>
+          <div class="slide-subtitle">เปรียบเทียบตัวแปรที่เพิ่มความเสี่ยงและเกราะคุ้มกันความสำเร็จ</div>
+        </div>
+        <div class="slide-badge">10 / 13</div>
+      </div>
+      <div class="slide-content-grid">
+        <div>
+          <div class="info-item" style="border-left: 4px solid var(--accent-danger); margin-bottom: 14px;">
+            <strong>🔴 ปัจจัยเร่งความเสี่ยง (Risk Drivers):</strong><br>
+            • ความก้าวร้าว/ดุร้าย (Aggression)<br>
+            • ความวิตกกังวลเมื่ออยู่เดี่ยว (Separation Anxiety)<br>
+            • ความคาดหวังไม่สมจริง (Unrealistic Expectations)<br>
+            • พลังงานไม่ตรงกัน (Energy Mismatch)
+          </div>
+          <div class="info-item" style="border-left: 4px solid var(--accent-cyan); margin-bottom: 14px;">
+            <strong>🔵 ปัจจัยคุ้มกันความสำเร็จ (Protective Factors):</strong><br>
+            • ระดับการฝึกอบรมสุนัข (Training Level) - อันดับ 1<br>
+            • การฝึกขับถ่ายเป็นที่ (House-trained)<br>
+            • จำนวนครั้งที่มาเยี่ยม (Visits Before Adoption)<br>
+            • ความคาดหวังที่สมจริง (Realistic Expectations)
+          </div>
+          <div class="info-item">
+            <strong>💡 เข็มทิศการจัดสรรงบประมาณ:</strong> ควรมุ่งเน้นทรัพยากรไปที่การฝึกพฤติกรรมและการให้คำปรึกษาปรับความคาดหวัง
+          </div>
+        </div>
+        <div class="chart-container">
+          <img src="assets/charts/19_correlation_tornado.png" alt="Correlation Tornado">
+          <div class="chart-caption">Tornado Chart สรุปค่าสัมประสิทธิ์สหสัมพันธ์ (Correlation Coefficient) ของทุกตัวแปร</div>
+        </div>
+      </div>
+      <div class="speaker-note-box">
+        <strong>🎙️ บทพูดผู้บรรยาย:</strong>
+        "สไลด์นี้รวบรวมตัวแปรทั้งหมดมาเปรียบเทียบในรูปแบบ Tornado Chart ฝั่งสีส้มคือปัจจัยที่เพิ่มความเสี่ยงส่งคืน นำโดยความก้าวร้าวและความวิตกกังวล ส่วนฝั่งสีน้ำเงินคือ 'เกราะคุ้มกัน' ซึ่งสิ่งที่โดดเด่นที่สุดคือ 'Training Level' หรือการฝึกอบรมสุนัข ชาร์ตนี้จึงเป็นเหมือนเข็มทิศบอกเราว่า ควรมุ่งเน้นทรัพยากรไปจัดการที่จุดใดเพื่อให้เกิดผลลัพธ์สูงสุดครับ"
+      </div>
+    </div>
+
+    <!-- SLIDE 11 -->
+    <div class="slide-card">
+      <div class="slide-header">
+        <div>
+          <span class="slide-tag">Actionable Roadmap</span>
+          <h2 class="slide-title">ยุทธศาสตร์ 3 ระยะเพื่อหยุดการส่งคืนสุนัขอย่างยั่งยืน</h2>
+          <div class="slide-subtitle">เปลี่ยนข้อค้นพบจากข้อมูล 42,000 เคส สู่แนวทางปฏิบัติจริง</div>
+        </div>
+        <div class="slide-badge">11 / 13</div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
+        <div class="info-item" style="border-top: 4px solid var(--accent-primary); padding: 16px;">
+          <strong style="color: var(--accent-primary); font-size: 15px;">ระยะที่ 1: ก่อนรับเลี้ยง</strong><br>
+          <span style="font-size: 12px; color: var(--text-secondary);">Pre-Adoption Gate</span>
+          <ul style="margin-top: 10px; font-size: 12px; display: flex; flex-direction: column; gap: 8px; list-style: none;">
+            <li>✔ บังคับพาหมาเดิมมา Meet & Greet</li>
+            <li>✔ กำหนดให้มาเยี่ยมอย่างน้อย 2-3 ครั้ง</li>
+            <li>✔ Counselling ปรับความคาดหวัง</li>
+            <li>✔ ตรวจสอบ Lifestyle & Energy Match</li>
+          </ul>
+        </div>
+        <div class="info-item" style="border-top: 4px solid var(--accent-cyan); padding: 16px;">
+          <strong style="color: var(--accent-cyan); font-size: 15px;">ระยะที่ 2: ในสถานสงเคราะห์</strong><br>
+          <span style="font-size: 12px; color: var(--text-secondary);">In-Shelter Intervention</span>
+          <ul style="margin-top: 10px; font-size: 12px; display: flex; flex-direction: column; gap: 8px; list-style: none;">
+            <li>✔ โปรแกรมฝึกพื้นฐาน (ลดส่งคืน 17.5%)</li>
+            <li>✔ ฝึกขับถ่ายให้เป็นที่ (House-training)</li>
+            <li>✔ บำบัด Separation Anxiety ก่อนส่งมอบ</li>
+            <li>✔ บันทึกคะแนนพฤติกรรมจริงอย่างโปร่งใส</li>
+          </ul>
+        </div>
+        <div class="info-item" style="border-top: 4px solid var(--accent-success); padding: 16px;">
+          <strong style="color: var(--accent-success); font-size: 15px;">ระยะที่ 3: หลังรับเลี้ยง 14 วันแรก</strong><br>
+          <span style="font-size: 12px; color: var(--text-secondary);">Golden Window Support</span>
+          <ul style="margin-top: 10px; font-size: 12px; display: flex; flex-direction: column; gap: 8px; list-style: none;">
+            <li>✔ โทรเช็กติดตามในวันที่ 3, 7, และ 14</li>
+            <li>✔ สายด่วน Hotline ให้คำปรึกษาฉุกเฉิน</li>
+            <li>✔ ส่งครูฝึกไปช่วยแนะนำที่บ้านทันที</li>
+            <li>✔ ชุมชนผู้รับเลี้ยงสนับสนุนทางอารมณ์</li>
+          </ul>
+        </div>
+      </div>
+      <div class="speaker-note-box">
+        <strong>🎙️ บทพูดผู้บรรยาย:</strong>
+        "เราขอเสนอยุทธศาสตร์ 3 ระยะที่เป็นรูปธรรมครับ ระยะแรกคือ 'ก่อนรับเลี้ยง' กำหนด Meet & Greet และปรับความคาดหวัง ระยะที่สอง 'ในสถานสงเคราะห์' ต้องลงทุนกับการฝึกพฤติกรรมพื้นฐาน และระยะที่สาม 'หลังรับเลี้ยง 14 วันแรก' มีระบบโทรเช็กและสายด่วนครูฝึกในสัปดาห์แรก หากเราทำครบทั้ง 3 ระยะนี้ เราจะลดการส่งคืนลงได้เกือบครึ่งหนึ่ง ช่วยชีวิตสุนัขได้นับพันตัวครับ"
+      </div>
+    </div>
+
+    <!-- SLIDE 12 -->
+    <div class="slide-card">
+      <div class="slide-header">
+        <div>
+          <span class="slide-tag">Conclusion & Takeaways</span>
+          <h2 class="slide-title">บทสรุป: การรับเลี้ยงสุนัขคือพันธสัญญาแห่งความพร้อม</h2>
+          <div class="slide-subtitle">เปลี่ยนความสงสารชั่วคราว ให้เป็นความผูกพันตลอดชีวิต</div>
+        </div>
+        <div class="slide-badge">12 / 13</div>
+      </div>
+      <ul class="info-list">
+        <li class="info-item" style="border-left: 4px solid var(--accent-primary); padding: 14px;">
+          <strong style="font-size: 15px;">1. "It's about Matching, Not Charity" (การจับคู่สำคัญกว่าความสงสาร)</strong><br>
+          <span>ความสำเร็จไม่ได้ขึ้นกับความสงสารเพียงชั่ววูบ แต่ขึ้นกับความลงรอยกันของพลังงาน เวลา และพื้นที่อาศัย</span>
+        </li>
+        <li class="info-item" style="border-left: 4px solid var(--accent-success); padding: 14px;">
+          <strong style="font-size: 15px;">2. "Expectations Beat Experience" (ความคาดหวังชนะประสบการณ์)</strong><br>
+          <span>ผู้รับเลี้ยงมือใหม่ประสบความสำเร็จได้สูงมาก เพียงแค่เข้าใจและเตรียมใจรับความจริงว่าสุนัขต้องการเวลาปรับตัว</span>
+        </li>
+        <li class="info-item" style="border-left: 4px solid var(--accent-warning); padding: 14px;">
+          <strong style="font-size: 15px;">3. "The 7-Day Golden Window" (สัปดาห์ทอง 7 วันแรก)</strong><br>
+          <span>หากสถานสงเคราะห์ยืนเคียงข้างผู้เลี้ยงและช่วยให้ผ่านพ้น 14 วันแรกไปได้ อัตราความสำเร็จจะสูงเกิน 90% ทันที</span>
+        </li>
+        <li class="info-item" style="border-left: 4px solid var(--accent-cyan); padding: 14px;">
+          <strong style="font-size: 15px;">4. "Training is the Best Investment" (การฝึกคือการลงทุนที่ดีที่สุด)</strong><br>
+          <span>การฝึกพฤติกรรมพื้นฐานช่วยตัดความเสี่ยงลงได้เกือบ 18% เปลี่ยนสุนัขที่มีปัญหาให้กลายเป็นสมาชิกครอบครัวที่สมบูรณ์</span>
+        </li>
+      </ul>
+      <div class="speaker-note-box">
+        <strong>🎙️ บทพูดผู้บรรยาย:</strong>
+        "สุนัขทุกตัวสมควรได้รับบ้านที่อบอุ่นและถาวร ข้อมูล 42,000 เคสนี้สอนเราว่า การส่งคืนสุนัขไม่ใช่ความล้มเหลวที่แก้ไขไม่ได้ หากเราเปลี่ยนผ่านจากการส่งมอบด้วยความรู้สึก มาเป็นการคัดกรองด้วยข้อมูลวิทยาศาสตร์ จับคู่พลังงาน ปรับความคาดหวัง และยืนเคียงข้างผู้เลี้ยงในสัปดาห์แรก เราจะสามารถเปลี่ยนสถิติ 1 ใน 7 ตัวที่ถูกทอดทิ้ง ให้กลายเป็น 7 ใน 7 ตัวที่ได้บ้านที่อบอุ่นตลอดไปครับ"
+      </div>
+    </div>
+
+    <!-- SLIDE 13 -->
+    <div class="slide-card">
+      <div class="slide-header">
+        <div>
+          <span class="slide-tag">Executive Dashboard</span>
+          <h2 class="slide-title">หน้าสรุปผลการวิเคราะห์และข้อเสนอแนะเชิงยุทธศาสตร์</h2>
+          <div class="slide-subtitle">รวบรวมตัวเลขชี้วัด สาเหตุหลัก เกราะคุ้มกัน และยุทธศาสตร์ 3 ระยะในหน้าเดียว</div>
+        </div>
+        <div class="slide-badge">13 / 13</div>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 18px;">
+        <div class="info-item" style="border-left: 4px solid var(--accent-danger); padding: 16px;">
+          <strong style="color: var(--accent-danger); font-size: 15px;">1. ข้อมูลภาพรวม & ความสูญเสีย</strong>
+          <ul style="margin-top: 8px; font-size: 12px; display: flex; flex-direction: column; gap: 6px; list-style: none;">
+            <li>• วิเคราะห์จากชุดข้อมูลจริง: 42,000 เคส</li>
+            <li>• อัตราสำเร็จถาวร: 85.0% (35,703 ครอบครัว)</li>
+            <li>• อัตราส่งคืนสถานสงเคราะห์: 15.0% (6,297 ตัว)</li>
+            <li>• สัดส่วนความล้มเหลว: 1 ในทุกๆ 7 ตัว</li>
+            <li>• ค่ามัธยฐานการส่งคืน: 7 วันแรก (วิกฤตสัปดาห์แรก)</li>
+          </ul>
+        </div>
+        <div class="info-item" style="border-left: 4px solid var(--accent-warning); padding: 16px;">
+          <strong style="color: var(--accent-warning); font-size: 15px;">2. 4 สาเหตุหลัก (ครองสัดส่วน >71%)</strong>
+          <ul style="margin-top: 8px; font-size: 12px; display: flex; flex-direction: column; gap: 6px; list-style: none;">
+            <li>• อันดับ 1: ทะเลาะกับสัตว์เลี้ยงเดิม (22.0% - 1,387 ตัว)</li>
+            <li>• อันดับ 2: พฤติกรรมก้าวร้าว/ดุร้าย (21.5% - 1,352 ตัว)</li>
+            <li>• อันดับ 3: วิตกกังวล/ทำลายของ (15.5% - 975 ตัว)</li>
+            <li>• อันดับ 4: ไม่เป็นไปตามคาดหวัง (11.9% - 750 ตัว)</li>
+            <li>• แพ้ขน (3.8%) และหมาป่วย (5.0%) เป็นสัดส่วนน้อยมาก</li>
+          </ul>
+        </div>
+        <div class="info-item" style="border-left: 4px solid var(--accent-cyan); padding: 16px;">
+          <strong style="color: var(--accent-cyan); font-size: 15px;">3. เกราะคุ้มกัน & ตัวคูณความเสี่ยง</strong>
+          <ul style="margin-top: 8px; font-size: 12px; display: flex; flex-direction: column; gap: 6px; list-style: none;">
+            <li>• 0 พฤติกรรมเสี่ยง -> ส่งคืนต่ำเพียง 9.2%</li>
+            <li>• 3 พฤติกรรมเสี่ยง -> ส่งคืนพุ่งสูงถึง 40.2%</li>
+            <li>• การฝึกสุนัข (Training) -> ลดการส่งคืนลงได้ 17.5%</li>
+            <li>• เยี่ยมชม 4 ครั้ง -> ลดการส่งคืนเหลือ 10.9%</li>
+            <li>• มือใหม่ที่คาดหวังสมจริง (9.4%) ชนะคนเคยเลี้ยง (16.6%)</li>
+          </ul>
+        </div>
+        <div class="info-item" style="border-left: 4px solid var(--accent-success); padding: 16px;">
+          <strong style="color: var(--accent-success); font-size: 15px;">4. ยุทธศาสตร์ 3 ระยะเพื่อผลลัพธ์</strong>
+          <ul style="margin-top: 8px; font-size: 12px; display: flex; flex-direction: column; gap: 6px; list-style: none;">
+            <li>• ก่อนรับ: บังคับ Meet & Greet + เยี่ยม 2-3 ครั้ง</li>
+            <li>• ในสถานสงเคราะห์: บังคับฝึกพฤติกรรมพื้นฐาน</li>
+            <li>• หลังรับเลี้ยง: โทรเช็กวันที่ 3, 7, 14 + สายด่วนครูฝึก</li>
+            <li>• เป้าหมาย: ลดอัตราการส่งคืนลง 50%</li>
+            <li>• เปลี่ยนจาก '1 ใน 7 ถูกทอดทิ้ง' สู่ 'บ้านถาวรตลอดไป'</li>
+          </ul>
+        </div>
+      </div>
+      <div class="speaker-note-box">
+        <strong>🎙️ บทพูดผู้บรรยาย:</strong>
+        "สไลด์นี้คือหน้าสรุปผลรวบยอดทั้งหมดของการศึกษา 42,000 เคสครับ แม้เราจะสำเร็จถึง 85% แต่ช่องว่าง 15% หรือ 6,297 ตัวที่ถูกส่งคืน มีจุดวิกฤตอยู่ที่ 7 วันแรก และกว่า 71% เกิดจากพฤติกรรมและความขัดแย้ง แต่ข่าวดีคือเราป้องกันได้ด้วยการฝึกสุนัข การมาเยี่ยมชม และการปรับความคาดหวัง หากนำยุทธศาสตร์ 3 ระยะไปปฏิบัติจริง เราจะสามารถลดการส่งคืนลงครึ่งหนึ่ง และเปลี่ยนสุนัขที่เคยถูกทอดทิ้ง ให้ได้อยู่ในบ้านที่อบอุ่นตลอดไปครับ"
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

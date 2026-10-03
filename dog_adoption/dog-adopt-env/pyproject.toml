@@ -1,0 +1,13 @@
+[project]
+name = "dog-adopt-env"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.14"
+dependencies = []
+
+[project.scripts]
+dog-adopt-env = "dog_adopt_env:main"
+
+[build-system]
+requires = ["uv_build>=0.12.9,<0.13.0"]
+build-backend = "uv_build"
